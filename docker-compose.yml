@@ -11,8 +11,7 @@ services:
     volumes:
       - ./orderapp/:/app
     command: >
-      sh -c "wait-for order-db:5432 && wait-for rabbitmq:5672 &&
-             python manage.py migrate &&
+      sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8080"
     depends_on:
       - order-db
@@ -28,8 +27,7 @@ services:
     volumes:
       - ./invoiceapp/:/app
     command: >
-      sh -c "wait-for invoice-db:5432 && wait-for order-app:8080 &&
-             python manage.py migrate &&
+      sh -c "python manage.py migrate &&
              celery -A invoiceapp worker -l info"
     depends_on:
       - order-app
